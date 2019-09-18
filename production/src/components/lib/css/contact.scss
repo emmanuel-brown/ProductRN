@@ -1,0 +1,43 @@
+@import 'navBar.scss';
+
+
+@media only screen and (min-width: 0px){
+    body{
+        background-color: #131515;
+        color: #0FF4C6;
+    }
+
+    #navigation{
+        margin-bottom: 0px;
+    }
+
+    div p{
+        margin: auto;
+    }
+
+    form{
+        background-color: #4C6085;
+        color: #0FF4C6;
+        text-align: center;
+        border-radius: 3%;
+        padding: 10px 5%;
+        margin: 129px auto;
+    }
+}
+
+@media only screen and (min-width: 768px){
+    #holdForm{
+        display: block;
+        background-image: url('https://valleyvision.org/wp-content/uploads/2018/04/TECh.jpg');
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        z-index: -1;
+    }
+    form{
+        padding: 125px 125px;
+        width: 300px;
+        font-size: 27px;
+    }
+}
