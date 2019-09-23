@@ -1,0 +1,28 @@
+{
+  "name": "ProBack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "cd production && npm start",
+    "dev": "concurrently \"npm run server \" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emmanuel-brown/ProductRN.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emmanuel-brown/ProductRN/issues"
+  },
+  "homepage": "https://github.com/emmanuel-brown/ProductRN#readme",
+  "dependencies": {
+    "concurrently": "^4.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}

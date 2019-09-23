@@ -35,7 +35,7 @@ class DoIt extends React.Component{
         let takeIt = this.state.defaults;
         let pass = [];
         takeIt.map((product) =>{
-            product.description.includes(cata) && pass.push(product)
+            return product.description.includes(cata) && pass.push(product)
         })
         this.setState({ display: pass })
     }
@@ -47,14 +47,14 @@ class DoIt extends React.Component{
     render(){
         let deploy = []
         this.state.display.map((product1) =>{
-            deploy.push(
+            return deploy.push(
                 <Block 
                     name={product1.name}
                     price={product1.price}
                     image={product1.image}
                     description={product1.description}
                     index={product1.index}
-                />
+                /> 
             );
         })
 
