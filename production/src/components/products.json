@@ -1,73 +1,73 @@
 [
     {
         "name": "Hover Board",
-        "price": 7000,
+        "price": 7000.99,
         "description": "compliance vehicle",
         "image": "./images/hoverBoard.jpg"
     },
     {
         "name": "Lexus Board",
-        "price": "10000",
+        "price": "9999.99",
         "description": "compliance vehicle",
         "image": "./images/hoverCraft.jpg"
     },
     {
         "name": "Contact Lenses",
-        "price": "200",
+        "price": "200.99",
         "description": "wearable",
         "image": "./images/contacts.jpeg"
     },
     {
         "name": "Tesla Model 3",
-        "price": "35000",
+        "price": "35000.99",
         "description": "vehicle",
         "image": "./images/tesla.jpg"
     },
     {
         "name": "SGNL Wristband",
-        "price": "149",
+        "price": "149.99",
         "description": "wearable",
         "image": "./images/sgnlWristband.jpg"
     },
     {
         "name": "Tap Keyboard",
-        "price": "199",
+        "price": "199.99",
         "description": "wearable",
         "image": "./images/tap.gif"
     },
     {
         "name": "Tobi Eye Tracker",
-        "price": "168",
+        "price": "168.99",
         "description": "compliance",
         "image": "./images/eyeTracker.jpeg"
     },
     {
         "name": "Looking Glass Halographic Display",
-        "price": "599", 
+        "price": "599.99", 
         "description": "compliance",
         "image": "./images/lookingGlass.jpeg"
     },
     {
         "name": "Leap Motion",
-        "price": "80",
+        "price": "80.99",
         "description": "compliance",
         "image": "./images/leapMotion.gif"
     },
     {
         "name": "Paper-Thin OLED TV",
-        "price": "9999",
+        "price": "9999.99",
         "description": "compliance",
         "image": "./images/oled-thin.jpeg"
     },
     {
         "name": "Airselfie Mini Drone",
-        "price": "199",
+        "price": "199.99",
         "description": "compliance",
         "image": "./images/airselfie.jpg"
     },
     {
         "name": "Translating Earphones",
-        "price": "178",
+        "price": "178.99",
         "description": "wearable",
         "image": "./images/translateEarbuds.jpg"
     }

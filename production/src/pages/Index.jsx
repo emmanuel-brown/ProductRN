@@ -18,7 +18,6 @@ class Home extends React.Component{
     }
 
     componentDidMount(){
-        fetch('/api/hello').then(res => res.json()).then(thing => {console.log(thing.hello)})
         axios({
             method: 'post',
             url: '/api/name',

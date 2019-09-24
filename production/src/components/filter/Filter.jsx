@@ -1,11 +1,16 @@
 import React from 'react';
 import Product from '../products.json'
 import Block from './ProductBlock'
+import axios from 'axios'
 
 class DoIt extends React.Component{
     constructor(props){
         super(props);
-        this.state = {
+        this.state = { 
+            /*
+                defaults and display are seperated so that when catagory are being filter it will
+                still be able to go back to it's original state.
+            */
             defaults: Product,//Products from products.json
             display: [],//Content that will be mapped through from the defaults
             filterOn: true,//For toggling side bar
@@ -13,25 +18,38 @@ class DoIt extends React.Component{
     }
 
     componentDidMount(){
+    
         this.alphaUp(true);//Page will display Product in alphabetical order
+        axios({
+            method: "post",
+            url: '/api/upload', 
+            data: [{
+                name: "Emmanuel Brown",
+                age: 17,
+                favColor: "blue"
+            }]
+        }).then(() =>{
+            //fetch('/api/restore').then(res => res.json()).then(res =>{console.table(res)}).catch(() => {alert("restore did not work")})
+            console.log("there is hope")
+        })
     }
 
     /*Start of filter*/
-    priceAscend = (ascend) =>{
+    priceAscend = (ascend) =>{ // If function parameter is true dipslay numerically ascending else numerically descend
         let takeIt = this.state.defaults.sort((a,b) =>{
             return ascend ? a.price - b.price : b.price - a.price
         });
         this.setState({ display: takeIt })
     }
 
-    alphaUp = (up) =>{
+    alphaUp = (up) =>{ // if function parameter is true dipslay by alphabetically ascending else alphabetically descned
         let takeIt = this.state.defaults.sort((a,b) =>{
             return up ? a.name.charCodeAt(0) - b.name.charCodeAt(0): b.name.charCodeAt(0) - a.name.charCodeAt(0);
-        });
+        }); // Problem: takeIt only checks first letter of the word
         this.setState({ display: takeIt })
     }
 
-    Catagory = (cata) =>{
+    Catagory = (cata) =>{ // any products that match the parameter as its catagory will be displayed
         let takeIt = this.state.defaults;
         let pass = [];
         takeIt.map((product) =>{
@@ -40,15 +58,18 @@ class DoIt extends React.Component{
         this.setState({ display: pass })
     }
     /* End of filter*/
-    toggleFilter = () => {
+    toggleFilter = () => { // This will toggle the visibility of the filter
         let {filterOn} = this.state;
         this.setState({ filterOn: !filterOn })
     }
     render(){
+        /*
+            Whenever component re-renders this will run itself t display the products
+        */
         let deploy = []
-        this.state.display.map((product1) =>{
+        this.state.display.map((product1) =>{ // this maps the through display
             return deploy.push(
-                <Block 
+                <Block // each product will be display in the block. This is where it's being done
                     name={product1.name}
                     price={product1.price}
                     image={product1.image}
@@ -58,8 +79,8 @@ class DoIt extends React.Component{
             );
         })
 
-        let position = '0'
-        if(!this.state.filterOn){
+        let position = '0' // the natural position of the filter is 0 which moves that it's visible
+        if(!this.state.filterOn){ // if the filter is not on (filterOn = false) move itself -100% off the screen
             position = '-100';
         }
         return(
