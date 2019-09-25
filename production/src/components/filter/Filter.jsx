@@ -1,9 +1,9 @@
 import React from 'react';
-import Product from '../products.json'
+// import Product from '../products.json'
 import Block from './ProductBlock'
-import axios from 'axios'
+// import axios from 'axios'
 
-class DoIt extends React.Component{
+class Filter extends React.Component{
     constructor(props){
         super(props);
         this.state = { 
@@ -11,27 +11,17 @@ class DoIt extends React.Component{
                 defaults and display are seperated so that when catagory are being filter it will
                 still be able to go back to it's original state.
             */
-            defaults: Product,//Products from products.json
+            defaults: [],//Products from database
             display: [],//Content that will be mapped through from the defaults
             filterOn: true,//For toggling side bar
         }
     }
 
     componentDidMount(){
-    
-        this.alphaUp(true);//Page will display Product in alphabetical order
-        axios({
-            method: "post",
-            url: '/api/upload', 
-            data: [{
-                name: "Emmanuel Brown",
-                age: 17,
-                favColor: "blue"
-            }]
-        }).then(() =>{
-            //fetch('/api/restore').then(res => res.json()).then(res =>{console.table(res)}).catch(() => {alert("restore did not work")})
-            console.log("there is hope")
-        })
+        fetch('/api/restore')
+            .then(res => res.json())
+            .then(res => this.setState({defaults: res}))
+            .then(() => this.priceAscend(true))
     }
 
     /*Start of filter*/
@@ -72,7 +62,7 @@ class DoIt extends React.Component{
                 <Block // each product will be display in the block. This is where it's being done
                     name={product1.name}
                     price={product1.price}
-                    image={product1.image}
+                    image={product1.image_href}
                     description={product1.description}
                     index={product1.index}
                 /> 
@@ -123,4 +113,4 @@ class DoIt extends React.Component{
     }
 }
 
-export default DoIt
+export default Filter

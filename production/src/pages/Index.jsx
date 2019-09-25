@@ -21,10 +21,10 @@ class Home extends React.Component{
         axios({
             method: 'post',
             url: '/api/name',
-            data: {
+            data: [{
                 firstName: "Emmanuel",
                 lastName: "Brown"
-            }
+            }]
         }).then(i => console.log(i)).catch(() => {console.log("unable to post")})
     }
 
