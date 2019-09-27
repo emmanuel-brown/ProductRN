@@ -1,7 +1,9 @@
 import React from 'react';
-// import Product from '../products.json'
+import Popup from '../Popup'
 import Block from './ProductBlock'
+import ContactForm from '../ContactForm'
 // import axios from 'axios'
+
 
 class Filter extends React.Component{
     constructor(props){
@@ -14,38 +16,51 @@ class Filter extends React.Component{
             defaults: [],//Products from database
             display: [],//Content that will be mapped through from the defaults
             filterOn: true,//For toggling side bar
+            ascend: Boolean,
+            orderBy: "price",
+            Popup: true
         }
     }
 
+    
+
     componentDidMount(){
-        fetch('/api/restore')
-            .then(res => res.json())
-            .then(res => this.setState({defaults: res}))
-            .then(() => this.priceAscend(true))
+        this.alphaUp(true)
+
+        // axios( {
+        //     method: 'POST',
+        //     url: '/api/upload/',
+        //     data: Product
+        // })
+    }
+
+    switched = () =>{
+        this.setState({ Popup: !Popup }, () => console.log(this.state.Popup))
+    }
+
+    sendContact = (e) =>{
+        
+        e.preventDefalut()
     }
 
     /*Start of filter*/
     priceAscend = (ascend) =>{ // If function parameter is true dipslay numerically ascending else numerically descend
-        let takeIt = this.state.defaults.sort((a,b) =>{
-            return ascend ? a.price - b.price : b.price - a.price
-        });
-        this.setState({ display: takeIt })
+        fetch(`/api/products/price/${ascend ? "ASC" : "DESC"}`)
+            .then(res => res.json())
+            .then( res =>  this.setState({ display: res, orderBy: "price" , ascend }))
     }
 
-    alphaUp = (up) =>{ // if function parameter is true dipslay by alphabetically ascending else alphabetically descned
-        let takeIt = this.state.defaults.sort((a,b) =>{
-            return up ? a.name.charCodeAt(0) - b.name.charCodeAt(0): b.name.charCodeAt(0) - a.name.charCodeAt(0);
-        }); // Problem: takeIt only checks first letter of the word
-        this.setState({ display: takeIt })
+    alphaUp = (ascend) =>{ // if function parameter is true dipslay by alphabetically ascending else alphabetically descend
+        fetch(`/api/products/name/${ascend ? "ASC" : "DESC"}`)
+            .then(res => res.json())
+            .then( res =>{ this.setState({ display: res, orderBy: "price" , ascend  })})
     }
 
     Catagory = (cata) =>{ // any products that match the parameter as its catagory will be displayed
-        let takeIt = this.state.defaults;
-        let pass = [];
-        takeIt.map((product) =>{
-            return product.description.includes(cata) && pass.push(product)
-        })
-        this.setState({ display: pass })
+        const { orderBy, ascend } = this.state
+        fetch(`/api/products/${orderBy}/${ascend ? "ASC" : "DESC"}/${cata}`)
+            .then(res => res.json())
+            .then( res =>{ this.setState({ display: res })})
     }
     /* End of filter*/
     toggleFilter = () => { // This will toggle the visibility of the filter
@@ -54,7 +69,7 @@ class Filter extends React.Component{
     }
     render(){
         /*
-            Whenever component re-renders this will run itself t display the products
+            Whenever component re-renders this will run itself to display the products
         */
         let deploy = []
         this.state.display.map((product1) =>{ // this maps the through display
@@ -65,6 +80,7 @@ class Filter extends React.Component{
                     image={product1.image_href}
                     description={product1.description}
                     index={product1.index}
+                    key={product1.product_ID}
                 /> 
             );
         })
@@ -100,7 +116,7 @@ class Filter extends React.Component{
                                 <div onClick={() => this.Catagory("vehicle")}>Vehicle</div>
                             </div>
                         </div>
-                        <div className="menu-button" onClick={() => this.toggleFilter()}>
+                        <div className="menu-button" onClick={ () => this.toggleFilter() }>
                             <span></span>
                             <span></span>
                             <span></span>
@@ -108,6 +124,9 @@ class Filter extends React.Component{
                     </div>
                 </div>
                 <main id="contents">{deploy}</main>
+                <Popup clicked={ this.switched } isOn={ this.state.Popup }>
+                    <ContactForm />
+                </Popup>
             </React.Fragment>
         )
     }

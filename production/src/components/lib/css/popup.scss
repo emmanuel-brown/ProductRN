@@ -1,0 +1,24 @@
+.Popup{
+    display: block;
+    width: 19rem;
+    height: 24rem;
+    position: fixed;
+    border: 1px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid #0FF4C6;
+    border-radius: 4% 23%;
+    background-color: #131515;
+    color: #0FF4C6;
+    &_exit{
+        // position: absolute;
+        text-align: center;
+        background-color: #0FF4C6;
+        color: black;
+        border-radius: 100%;
+        width: 20px;
+        height: 20px;
+    
+    }
+}

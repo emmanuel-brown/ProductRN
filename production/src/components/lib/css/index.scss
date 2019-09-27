@@ -1,5 +1,7 @@
 @import './navBar.scss';
 @import './footer.scss';
+@import './popup.scss';
+
 
 *{
     padding: 0;
@@ -14,6 +16,7 @@ a{
 body{
     background-color: #131515;
     color: #0FF4C6;
+    font-family: 'Lexend Zetta', sans-serif;
 }
 
 .divider{

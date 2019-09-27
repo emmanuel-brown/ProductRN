@@ -1,37 +1,84 @@
 const express = require('express')
 const cors = require('cors')
 const mysql = require('mysql')
+require('dotenv').config()
 
 const connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
     user: 'root',
-    password: 'Lilman10',
+    password: process.env.KEY,
     database: 'ecomerce'
 })
 
 const app = express()
-app.use(cors())
+app.use(cors()) //enable connection to react app even though they're seperate
 const PORT = 5000;
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// const arrayIt = (arrayOfObjects) =>{
+//     return arrayOfObjects.map(() => [property1, property2])
+// }
+
 const values = (objects) =>{ //This function is an older version to return values... keeping it for future usecases.
     const value = []
-    objects.map((employee) => {
-        value.push(` ("${employee.name}", "${employee.price}", "${employee.description}", "${employee.image}")`)
+    objects.map((prop) => {
+        value.push(` ("${prop.firstName}", "${prop.lastName}", "${prop.phoneNumber}", "${prop.email}", "${prop.address}")`)
     })
     const length = value.length
     value[length - 1] = value[length - 1].replace(')', ');')
     return value.join().replace('),,(', '),(')
 }
 
-app.get('/api/restore', (req, res) =>{
-    console.log("Restore has been reached")
-    connection.query("SELECT * FROM products LEFT JOIN prices ON products.price_ID=prices.price_ID LIMIT 20", (err, data) =>{
+const prodWithPrice = "SELECT * FROM products LEFT JOIN prices ON products.price_ID=prices.price_ID"
+const selProd = "SELECT * FROM products" //General select all products
+const insert = "INSERT INTO "
+const ljPrices = "LEFT JOIN prices ON products.price_ID=prices.price_ID"
+
+// function Contact(name, )
+
+
+app.get('/api/products', (req, res) =>{
+    console.log("products has been reached")
+    connection.query(`${prodWithPrice} LIMIT 20`, (err, data) =>{
         res.send(data)
     })
 })
 
-app.listen(PORT, () => { console.log(`Listening on port ${PORT}...`)})
+app.get('/api/products/:id', (req, res) =>{
+    if(req.params.id !== ""){
+        connection.query(`${selProd} ${ljPrices} WHERE product_ID = ${req.params.id} LIMIT 1`, (err, data) =>{
+            res.send(data)
+        })
+    } else{
+        console.log("Invalid url input")
+    }
+})
+
+app.get(`/api/products/:orderBy/:isAscending`, (req, res) =>{
+    const {orderBy, isAscending } = req.params
+    connection.query(`${prodWithPrice} ORDER BY ${orderBy} ${isAscending} LIMIT 20`, (err, data) =>{
+        res.send(data)
+    })
+})
+
+app.get(`/api/products/:orderBy/:isAscending/:catagory`, (req, res) =>{
+    const {orderBy, isAscending, catagory } = req.params
+    connection.query(`${prodWithPrice} WHERE description = "${catagory}" ORDER BY ${orderBy} ${isAscending} LIMIT 20`, (err, data) =>{
+        res.send(data)
+    })
+})
+
+
+
+app.post('/api/newContact', (req, res) =>{
+    const contact = req.body
+    connection.query(`${insert} contacts(firstName, lastName, phoneNumber, emails, address_ID) VALUES ${values([contact])}`, () =>{
+        console.log("New Contact was sent successfully")
+    })
+    res.end()
+})
+
+app.listen(PORT, () => { console.log(`Listening on port ${PORT}...`) })

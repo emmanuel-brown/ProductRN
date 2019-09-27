@@ -38,6 +38,7 @@ class Contact extends React.Component {
             Email: e.target.value,
             isEmail
         })
+        console.log(e.target.value)
     }
     handleAddress = (e) =>{
         let {isAddress} = this.state
@@ -63,20 +64,20 @@ class Contact extends React.Component {
             <React.Fragment>
                 <Navbar />
                 <div id="holdForm">
-                    <form onSubmit={this.handleSubmit.bind(this)}>
+                    <form id="contactForm" onSubmit={this.handleSubmit.bind(this)}>
                         <div className="form-name">
                             <label for="exampleInputName">Name:</label>
-                            <input type="name" className="form-control" onChange={() => this.handleName} placeholder="First Name, Last Name" required/>
+                            <input type="name" className="form-control" onChange={ this.handleName } required/>
                         </div>
                         <br />
                         <div className="form-address">
                             <label for="E-mail">E-mail:</label>
-                            <input type="address" value={this.state.Email} onChange={this.handleEmail.bind(this)} className="form-control" placeholder="E-mail" required/>
+                            <input type="address" value={this.state.Email} onChange={ this.handleEmail } className="form-control" required/>
                         </div>
                         <br />
                         <div className="form-address">
                             <label for="Address">Address:</label>
-                            <input type="address" className="form-control" onChange={this.handleAddress.bind(this)} placeholder="Address" required/>
+                            <input type="address" className="form-control" onChange={ this.handleAddress } required/>
                         </div>
                         <br />
                         <input type="submit" className="btn btn-primary" value="Submit Your Order"/>

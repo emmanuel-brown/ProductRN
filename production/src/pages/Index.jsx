@@ -8,12 +8,13 @@ import TheMoment from '../components/lib/images/beInTheMoment.jpg'
 import TheNew from '../components/lib/images/theNew.jpg'
 import Oculus from '../components/lib/images/oculus.jpg'
 import axios from 'axios'
+import Popup from '../components/Popup'
 
 class Home extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            sayIt : ""
+            popUp : true
         }
     }
 
@@ -107,6 +108,11 @@ class Home extends React.Component{
                     </div>
                 </section>
                 <Footer />
+                <Popup>
+                    <form action="" method="post">
+                        <label></label>
+                    </form>
+                </Popup>
             </React.Fragment>
         )
     }
