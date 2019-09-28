@@ -7,29 +7,41 @@ import Footer from '../components/Footer'
 import TheMoment from '../components/lib/images/beInTheMoment.jpg'
 import TheNew from '../components/lib/images/theNew.jpg'
 import Oculus from '../components/lib/images/oculus.jpg'
-import axios from 'axios'
+// import axios from 'axios'
 import Popup from '../components/Popup'
 
 class Home extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            popUp : true
+            popUp : true,
+            contacts: [],
+            Popup: true
         }
     }
 
     componentDidMount(){
-        axios({
-            method: 'post',
-            url: '/api/name',
-            data: [{
-                firstName: "Emmanuel",
-                lastName: "Brown"
-            }]
-        }).then(i => console.log(i)).catch(() => {console.log("unable to post")})
+        fetch('/api/contacts')
+            .then(res => res.json())
+            .then(contacts => this.setState({ contacts }))              
     }
 
+    switched = () =>{
+        this.setState({ Popup: !Popup }, () => console.log(this.state.Popup))
+    }
+
+
     render(){
+        const contacts = this.state.contacts.map(({ contact_ID, firstName, lastName, phoneNumber, emails }, index) => {
+            return (
+                <div key={contact_ID}>
+                    <p>{ firstName }</p>
+                    <p>{ lastName }</p>
+                    <p>{ phoneNumber }</p>
+                    <p>{ emails }</p>
+                </div>
+            )
+        })
         return(
             <React.Fragment>
                 <Navbar />
@@ -108,10 +120,10 @@ class Home extends React.Component{
                     </div>
                 </section>
                 <Footer />
-                <Popup>
-                    <form action="" method="post">
-                        <label></label>
-                    </form>
+                <Popup clicked={ this.switched } isOn={ this.state.Popup }>
+                    <div id="contacts">
+                        {contacts}
+                    </div>
                 </Popup>
             </React.Fragment>
         )

@@ -26,21 +26,10 @@ class Filter extends React.Component{
 
     componentDidMount(){
         this.alphaUp(true)
-
-        // axios( {
-        //     method: 'POST',
-        //     url: '/api/upload/',
-        //     data: Product
-        // })
     }
 
     switched = () =>{
         this.setState({ Popup: !Popup }, () => console.log(this.state.Popup))
-    }
-
-    sendContact = (e) =>{
-        
-        e.preventDefalut()
     }
 
     /*Start of filter*/

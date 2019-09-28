@@ -39,7 +39,7 @@ const ljPrices = "LEFT JOIN prices ON products.price_ID=prices.price_ID"
 
 // function Contact(name, )
 
-
+//sends all products down with no filter
 app.get('/api/products', (req, res) =>{
     console.log("products has been reached")
     connection.query(`${prodWithPrice} LIMIT 20`, (err, data) =>{
@@ -47,6 +47,7 @@ app.get('/api/products', (req, res) =>{
     })
 })
 
+//send products base on product di
 app.get('/api/products/:id', (req, res) =>{
     if(req.params.id !== ""){
         connection.query(`${selProd} ${ljPrices} WHERE product_ID = ${req.params.id} LIMIT 1`, (err, data) =>{
@@ -57,13 +58,14 @@ app.get('/api/products/:id', (req, res) =>{
     }
 })
 
+//sends products from mysql in order depending on the parameters
 app.get(`/api/products/:orderBy/:isAscending`, (req, res) =>{
     const {orderBy, isAscending } = req.params
     connection.query(`${prodWithPrice} ORDER BY ${orderBy} ${isAscending} LIMIT 20`, (err, data) =>{
         res.send(data)
     })
 })
-
+//sends products from mysql organized by catagory
 app.get(`/api/products/:orderBy/:isAscending/:catagory`, (req, res) =>{
     const {orderBy, isAscending, catagory } = req.params
     connection.query(`${prodWithPrice} WHERE description = "${catagory}" ORDER BY ${orderBy} ${isAscending} LIMIT 20`, (err, data) =>{
@@ -71,8 +73,16 @@ app.get(`/api/products/:orderBy/:isAscending/:catagory`, (req, res) =>{
     })
 })
 
+//sends all contacts to react
+app.get('/api/contacts', (req, res) => {
+    connection.query('SELECT * FROM contacts', (err, data) =>{
+        res.send(data)
+        console.log(data)
+    })
+})
 
 
+//sends a new contact to mysql from react
 app.post('/api/newContact', (req, res) =>{
     const contact = req.body
     connection.query(`${insert} contacts(firstName, lastName, phoneNumber, emails, address_ID) VALUES ${values([contact])}`, () =>{
