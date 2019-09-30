@@ -1,7 +1,7 @@
 import React from 'react';
-import Popup from '../Popup'
+import Popup from '../Popup/Popup'
 import Block from './ProductBlock'
-import ContactForm from '../ContactForm'
+import ContactForm from '../Popup/ContactForm'
 // import axios from 'axios'
 
 
@@ -98,7 +98,7 @@ class Filter extends React.Component{
                             </div>
                         </div>
                         <div id="types" className="contain">
-                            <h3>types</h3>
+                            <h3>Types</h3>
                             <div className="options">
                                 <div onClick={() => this.Catagory("compliance")}>Compliance</div>
                                 <div onClick={() => this.Catagory("wearable")}>Wearable</div>

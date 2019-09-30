@@ -81,7 +81,7 @@ class ContactForm extends React.Component {
                 method: "POST",
                 url: "/api/newContact",
                 data: this.state.contact
-            })
+            }).then( this.props.whenMade )
         } else{
             this.isValid(true)
         }
@@ -92,14 +92,14 @@ class ContactForm extends React.Component {
         const { email, phoneNumber, lastName, firstName } = this.state.contact
         return(
             <React.Fragment>
-                <form onSubmit={ this._sendContact.bind(this) }>
+                <form onSubmit={ this._sendContact.bind(this) } className="contactForm">
                         <div className="">
                             <label htmlFor="firstName">First Name:</label>
                             <input type="name" className="form-control" value={ firstName } onChange={ this.handleFirstName } required/>
                         </div>
                         <br />
                         <div className="">
-                            <label htmlFor="lastName">Last Name:</label>
+                            <label  htmlFor="lastName">Last Name:</label>
                             <input type="name" className="form-control" value={ lastName } onChange={ this.handleLastName }required/>
                         </div>
                         <br />
@@ -115,7 +115,7 @@ class ContactForm extends React.Component {
                         <br />
                         <input 
                             type="submit" 
-                            className="btn btn-primary" 
+                            className="bttn" 
                             value="Submit Your Order" 
                             // style={this.isValid() ? 
                             //     {backgroundColor: "#0FF4C6"} : 

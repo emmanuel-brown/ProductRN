@@ -33,8 +33,10 @@ const values = (objects) =>{ //This function is an older version to return value
 }
 
 const prodWithPrice = "SELECT * FROM products LEFT JOIN prices ON products.price_ID=prices.price_ID"
+const sel = "SELECT * FROM "
 const selProd = "SELECT * FROM products" //General select all products
 const insert = "INSERT INTO "
+const del = "DELETE FROM "
 const ljPrices = "LEFT JOIN prices ON products.price_ID=prices.price_ID"
 
 // function Contact(name, )
@@ -67,7 +69,7 @@ app.get(`/api/products/:orderBy/:isAscending`, (req, res) =>{
 })
 //sends products from mysql organized by catagory
 app.get(`/api/products/:orderBy/:isAscending/:catagory`, (req, res) =>{
-    const {orderBy, isAscending, catagory } = req.params
+    const { orderBy, isAscending, catagory } = req.params
     connection.query(`${prodWithPrice} WHERE description = "${catagory}" ORDER BY ${orderBy} ${isAscending} LIMIT 20`, (err, data) =>{
         res.send(data)
     })
@@ -75,9 +77,18 @@ app.get(`/api/products/:orderBy/:isAscending/:catagory`, (req, res) =>{
 
 //sends all contacts to react
 app.get('/api/contacts', (req, res) => {
-    connection.query('SELECT * FROM contacts', (err, data) =>{
+    connection.query(`${sel} contacts`, (err, data) =>{
         res.send(data)
-        console.log(data)
+    })
+})
+
+//gets profile base on inputted name
+app.get('/api/user/:name', (req, res) =>{
+    const { name }= req.params
+    connection.query(`SELECT * FROM contacts WHERE firstName = "${ name }" LIMIT 1 ;`, (err, data) =>{
+        console.table(data)
+        res.send(data)
+        err && console.log("Was not able to get contact by name")
     })
 })
 
@@ -89,6 +100,13 @@ app.post('/api/newContact', (req, res) =>{
         console.log("New Contact was sent successfully")
     })
     res.end()
+})
+
+app.delete('/api/deleteContact/:id', (req, res) =>{
+    const { id } = req.params
+    connection.query(`${del} contacts WHERE contact_ID = ${id}`, (err, res) =>{
+        err ? console.log("deletion has failed") : console.log("deletion was successful")
+    })
 })
 
 app.listen(PORT, () => { console.log(`Listening on port ${PORT}...`) })

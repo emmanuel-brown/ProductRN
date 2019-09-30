@@ -1,29 +1,34 @@
 import React, { useState } from 'react'
-import Popup from '../Popup'
+import Popup from '../Popup/Popup'
 
 const Block = (props) =>{
     const [ popup, setPopup ] = useState(false)
     const switched = () =>{
         setPopup(!popup )
     }
+    const { name, index, price, description, image } = props
     return(
         <React.Fragment>
-            <div key={props.name} onClick={ () => setPopup(!popup) } id={props.name.split(' ').join('') + "1"} className="box">
+            <div key={ name } onClick={ () => setPopup(!popup) } id={ name.split(' ').join('') + "1"} className="box">
                 {/* if the index of the product is odd display to the right else dipslay to the left */}
-                <div className={`block-${props.index % 2 === 0 ? "left" : "right"}`}>
+                <div className={`block-${index % 2 === 0 ? "left" : "right"}`}>
                     <div className="show">
-                        <img id="contents-img" src={props.image} alt={props.name}/>
+                        <img id="contents-img" src={ image } alt={ name }/>
                     </div>
                     <div className="info">
-                        <h3>{props.name}</h3>
-                        <h4>{`$${props.price}`}</h4>
-                        <h4>{props.description}</h4>
+                        <h3>{ name }</h3>
+                        <h4>{`$${ price }`}</h4>
+                        <h4>{ description }</h4>
                     </div>
                 </div>
             </div>
             <Popup clicked={ switched } isOn={ popup }>
-                <p>{props.name}</p>
-                <p>{props.description}</p>
+                <div className="product-info">
+                    <h3>{ name }</h3>
+                    <img src={ image } alt={ name }/>
+                    <p>{ description }</p>
+                    <button className="Popup-bttn">Add to Cart</button>
+                </div>
             </Popup>
         </React.Fragment>
     )

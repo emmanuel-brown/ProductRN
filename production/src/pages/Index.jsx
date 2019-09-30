@@ -1,47 +1,68 @@
 import React from 'react'
-import '../components/lib/css/index.scss'
+// import axios from 'axios'
 import {Carousel} from 'react-responsive-carousel'
+import '../components/lib/css/index.scss'
 import'react-responsive-carousel/lib/styles/carousel.min.css'
+
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import TheMoment from '../components/lib/images/beInTheMoment.jpg'
 import TheNew from '../components/lib/images/theNew.jpg'
 import Oculus from '../components/lib/images/oculus.jpg'
-// import axios from 'axios'
-import Popup from '../components/Popup'
+import Popup from '../components/Popup/Popup'
+import Intro from '../components/Popup/Intro'
 
 class Home extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            popUp : true,
             contacts: [],
-            Popup: true
+            Popup: true,
+            id: null,
+            intro: true,
+            made: false,
+            name: ""
         }
     }
 
     componentDidMount(){
         fetch('/api/contacts')
             .then(res => res.json())
-            .then(contacts => this.setState({ contacts }))              
+            .then(contacts => this.setState({ contacts }));
+        // axios({
+        //     method: "DELETE",
+        //     url: `/api/deleteContact/${this.state.id}`
+        // })
     }
 
-    switched = () =>{
-        this.setState({ Popup: !Popup }, () => console.log(this.state.Popup))
+    _switched = () =>{
+        this.setState({ Popup: !Popup })
     }
 
+    _contactMade = () =>{
+        this.setState({
+            made: true
+        })
+        console.log("it worked")
+    }
+
+    handleName = (e) =>{
+        this.setState({ name: e.target.value })
+    }
+
+    logIn = (e) =>{
+        const { name } = this.state
+        fetch(`/api/user/${ name }`)
+            .then((res) => res.json())
+            .then((res) => this.setState({ 
+                id: res[0].contact_ID,
+                made: false
+            }))
+        e.preventDefault()
+    }
 
     render(){
-        const contacts = this.state.contacts.map(({ contact_ID, firstName, lastName, phoneNumber, emails }, index) => {
-            return (
-                <div key={contact_ID}>
-                    <p>{ firstName }</p>
-                    <p>{ lastName }</p>
-                    <p>{ phoneNumber }</p>
-                    <p>{ emails }</p>
-                </div>
-            )
-        })
+        const { id, made } = this.state
         return(
             <React.Fragment>
                 <Navbar />
@@ -109,9 +130,9 @@ class Home extends React.Component{
                         <div className="backend">
                             <h3>Contacts 2.0</h3>
                             <p>
-                            Regular contacts these days are just too simple.
-                            Be the first to get the power of your phone in a 
-                            more visual persective.
+                                Regular contacts these days are just too simple.
+                                Be the first to get the power of your phone in a 
+                                more visual persective.
                             </p>
                         </div>
                     </div>
@@ -120,10 +141,18 @@ class Home extends React.Component{
                     </div>
                 </section>
                 <Footer />
-                <Popup clicked={ this.switched } isOn={ this.state.Popup }>
-                    <div id="contacts">
-                        {contacts}
-                    </div>
+                <Intro isOn={ id === null && !made } whenMade={ this._contactMade }/>
+                <Popup clicked={ () => this.setState({ made: false }) }  isOn={ made }>
+                    <form onSubmit={ this.logIn }>
+                        <label htmlFor="Name">Name:</label>
+                        <input type="address" name="email" value={ this.state.name }onChange={ this.handleName } required/>
+                        <input 
+                            type="submit" 
+                            className="bttn" 
+                            value="Log In" 
+                            style={{color: '#0FF4C6'}}
+                        />
+                    </form>
                 </Popup>
             </React.Fragment>
         )
