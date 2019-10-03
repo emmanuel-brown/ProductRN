@@ -19,7 +19,7 @@ class Intro extends React.Component{
         if(true){
             let display = (
                 <div className="Popup-intro" >
-                    <button onClick={() => this.setState({ display: <ContactForm whenMade={ () => this.processSignUp() } /> })} className="Popup-bttn">Sign Up</button>
+                    <button onClick={ () => this.setState({ display: <ContactForm whenMade={ () => this.processSignUp() } /> })} className="Popup-bttn">Sign Up</button>
                     <button onClick={ this.props.whenMade }  className="Popup-bttn">Sign In</button>
                 </div>
             )

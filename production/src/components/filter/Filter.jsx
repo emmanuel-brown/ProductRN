@@ -2,7 +2,8 @@ import React from 'react';
 import Popup from '../Popup/Popup'
 import Block from './ProductBlock'
 import ContactForm from '../Popup/ContactForm'
-// import axios from 'axios'
+// import { runInThisContext } from 'vm';
+import axios from 'axios'
 
 
 class Filter extends React.Component{
@@ -18,7 +19,9 @@ class Filter extends React.Component{
             filterOn: true,//For toggling side bar
             ascend: Boolean,
             orderBy: "price",
-            Popup: true
+            signUp: true,
+            option: false,
+            optionInput: ""
         }
     }
 
@@ -28,8 +31,14 @@ class Filter extends React.Component{
         this.alphaUp(true)
     }
 
-    switched = () =>{
-        this.setState({ Popup: !Popup }, () => console.log(this.state.Popup))
+    toggleSignUp = () =>{
+        const { signUp } = this.state
+        this.setState({ signUp: !signUp }, () => console.log(signUp))
+    }
+
+    toggleOption = () =>{
+        const { option } = this.state
+        this.setState({ option: !option }, () => console.log(option))
     }
 
     /*Start of filter*/
@@ -51,11 +60,45 @@ class Filter extends React.Component{
             .then(res => res.json())
             .then( res =>{ this.setState({ display: res })})
     }
+
+    byId = (del) =>{
+        const { option, optionInput } = this.state
+        if(!del){
+            fetch(`/api/product/${ optionInput }`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    option: !option,
+                    display: res
+                })
+            }).catch(() => console.log("did not work"))
+        } else {
+            axios({
+                method: 'DELETE',
+                url: `/api/deleteProduct/${ optionInput }`
+            }).catch(() => console.log("deletion was unsuccessful"))
+        }
+    }
     /* End of filter*/
+
+    /* START of onChanges */
+    handleSearch = (e) =>{
+        this.setState({ optionInput: e.target.value })
+    }
+    /* END of onChanges */
+
     toggleFilter = () => { // This will toggle the visibility of the filter
         let {filterOn} = this.state;
         this.setState({ filterOn: !filterOn })
     }
+
+    toggleAdvanceSearch = () =>{
+        const { option } = this.state
+        this.setState({
+            option: !option
+        })
+    }
+
     render(){
         /*
             Whenever component re-renders this will run itself to display the products
@@ -69,6 +112,7 @@ class Filter extends React.Component{
                     image={product1.image_href}
                     description={product1.description}
                     index={product1.index}
+                    product_ID={product1.product_ID}
                     key={product1.product_ID}
                 /> 
             );
@@ -95,6 +139,7 @@ class Filter extends React.Component{
                             <div className="options">
                                 <div onClick={() => this.alphaUp(true)}>[A-Z]</div>
                                 <div onClick={() => this.alphaUp(false)}>[Z-A]</div>
+                                <div onClick={() => this.toggleAdvanceSearch()}>Advance Search</div>
                             </div>
                         </div>
                         <div id="types" className="contain">
@@ -113,8 +158,18 @@ class Filter extends React.Component{
                     </div>
                 </div>
                 <main id="contents">{deploy}</main>
-                <Popup clicked={ this.switched } isOn={ this.state.Popup }>
+                <Popup clicked={ this.toggleSignUp } isOn={ this.state.signUp }>
                     <ContactForm />
+                </Popup>
+                <Popup clicked={ this.toggleAdvanceSearch } isOn={ this.state.option }>
+                    <div className="Popup-addOns">
+                        <input type="text" name="Search" id="Search" value={ this.state.optionInput } onChange={ this.handleSearch }/>
+                        <br/>
+                        <br/>
+                        <button onClick={ () => this.byId(false) } className="Popup-bttn">Choose</button>
+                        <br />
+                        <button onClick={ () => this.ById(true) } className="Popup-bttn">Delete</button>
+                    </div>
                 </Popup>
             </React.Fragment>
         )

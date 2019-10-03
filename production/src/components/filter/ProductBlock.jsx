@@ -3,10 +3,10 @@ import Popup from '../Popup/Popup'
 
 const Block = (props) =>{
     const [ popup, setPopup ] = useState(false)
-    const switched = () =>{
+    const switched = () =>{ //turns on or off popup that display individual product information and add to cart feature
         setPopup(!popup )
     }
-    const { name, index, price, description, image } = props
+    const { name, index, price, description, image, product_ID } = props // object decomposition of all props
     return(
         <React.Fragment>
             <div key={ name } onClick={ () => setPopup(!popup) } id={ name.split(' ').join('') + "1"} className="box">
@@ -22,9 +22,9 @@ const Block = (props) =>{
                     </div>
                 </div>
             </div>
-            <Popup clicked={ switched } isOn={ popup }>
+            <Popup clicked={ switched } isOn={ popup }>{/* popup showing product details and add to cart */}
                 <div className="product-info">
-                    <h3>{ name }</h3>
+                    <h3>{ name }: { product_ID }</h3>
                     <img src={ image } alt={ name }/>
                     <p>{ description }</p>
                     <button className="Popup-bttn">Add to Cart</button>

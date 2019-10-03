@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import validator from 'validator'
 import '../components/lib/css/contact.scss'
 import Navbar from '../components/Navbar'
@@ -9,78 +10,128 @@ class Contact extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            valid: false,
-            isName: false,
-            Name: "",
-            isEmail: false,
-            Email: "",
-            isAddress: false,
-            Address: "",
+            firstName: "",
+            lastName: "",
+            phoneNumber: "",
+            email: "",
+            address: 1,//let this be a separate popup
+            username: "",
+            password: ""
+            
         }
+    }
+    //
+    /*
+        future development will display all errs inside of Popup
+    */
+
+    /* START OF onChanges */
+    // each function in section will indiviaully update each field to state
+    // must find a more dry way to do this
+    handleFirstName = (e) => { this.setState({ firstName: e.target.value }) }
+
+    handleLastName = (e) => { this.setState({ lastName: e.target.value }) }
+
+    handleEmail = (e) => { this.setState({ email: e.target.value }) }
+
+    handlePhoneNumber = (e) => { this.setState({ phoneNumber: e.target.value }) }
+
+    handleUsername = (e) => { this.setState({ username: e.target.value }) }
+
+    handlePassword = (e) => { this.setState({ password: e.target.value }) }
+    /* END OF onChange */
+
+    /*
+        validate inputs. return true or false if one input is incorrect. If "errs" is true it will 
+        log each individaul error if any.                    
+    */
+    isValid = (errs) => {
+        const { email, phoneNumber, lastName, firstName, username, password } = this.state
+        const iv = "was not valid"
+        let allIsGood = true
+        if(firstName.length > 50){
+            errs && console.log('First Name was too long')
+            allIsGood = false
+        }
+        if(lastName.length > 50){
+            errs && console.log('Last name was too long')
+            allIsGood = false
+        }
+        if(!validator.isMobilePhone(phoneNumber, "en-US") && phoneNumber.length < 10){
+            errs && console.log(`Phone number ${iv}`)
+            allIsGood = false
+        }
+        if(!validator.isEmail(email)){
+            errs && console.log(`Email ${iv}`)
+            allIsGood = false
+        }
+        if(username.length < 6){
+            errs && console.log('Username is not long enough')
+            allIsGood = false
+        }
+        if(password.length < 6){
+            errs && console.log('Password is not long enough')
+            allIsGood = false
+        }
+        return allIsGood
     }
 
-    handleName = (e) =>{
-        let {isName} = this.state
-        if(e.target.value !== ""){
-            isName = true
+    _sendContact = (e) =>{
+        if(this.isValid()){ //if validation returns true send to my sql database
+            axios({
+                method: "POST",
+                url: "/api/newContact",
+                data: this.state
+            }).then( this.props.whenMade ) //indicates to parent component that newContact was successful'
+                .catch(console.log("Sorry. Please Try again later"))
+        } else{
+            this.isValid(true)
         }
-        this.setState({
-            Name: e.target.value,
-            isName
-        })
-    }
-    handleEmail = (e) =>{
-        let {isEmail} = this.state
-        if(validator.isEmail(e.target.value)){
-            isEmail = true
-        }
-        this.setState({
-            Email: e.target.value,
-            isEmail
-        })
-        console.log(e.target.value)
-    }
-    handleAddress = (e) =>{
-        let {isAddress} = this.state
-        if(e.target.value !== ""){
-            isAddress = true
-        }
-        this.setState({
-            Address: e.target.value,
-            isAddress
-        })
+        e.preventDefault()
     }
 
-    handleSubmit = (e) =>{
-        const {isName, isEmail, isAddress, Name} = this.state
-        if(isName && isEmail && isAddress){
-            alert(`thank you ${Name} we will get with you shortly`)
-        }
-        e.preventDefault();
-    }
-
-    render(){
+    render(){ 
+        const { email, phoneNumber, lastName, firstName, username, password } = this.state
         return(
             <React.Fragment>
                 <Navbar />
                 <div id="holdForm">
-                    <form id="contactForm" onSubmit={this.handleSubmit.bind(this)}>
-                        <div className="form-name">
-                            <label for="exampleInputName">Name:</label>
-                            <input type="name" className="form-control" onChange={ this.handleName } required/>
+                    <form id="contactForm" onSubmit={ this._sendContact }>
+                    <div className="">
+                            <label htmlFor="firstName">First Name:</label>
+                            <input type="name" className="form-control" value={ firstName } onChange={ this.handleFirstName } required/>
                         </div>
                         <br />
-                        <div className="form-address">
-                            <label for="E-mail">E-mail:</label>
-                            <input type="address" value={this.state.Email} onChange={ this.handleEmail } className="form-control" required/>
+                        <div className="">
+                            <label  htmlFor="lastName">Last Name:</label>
+                            <input type="name" className="form-control" value={ lastName } onChange={ this.handleLastName }required/>
                         </div>
                         <br />
-                        <div className="form-address">
-                            <label for="Address">Address:</label>
-                            <input type="address" className="form-control" onChange={ this.handleAddress } required/>
+                        <div className="">
+                            <label htmlFor="email">E-mail:</label>
+                            <input type="email" value={ email } name="email" onChange={ this.handleEmail } required/>
                         </div>
                         <br />
-                        <input type="submit" className="btn btn-primary" value="Submit Your Order"/>
+                        <div className="">
+                            <label htmlFor="phoneNumber">Phone Number:</label>
+                            <input type="phoneNumber" value={ phoneNumber } name="phoneNumber" onChange={ this.handlePhoneNumber } required/>
+                        </div>
+                        <br />
+                        <div className="">
+                            <label htmlFor="username">New Username:</label>
+                            <input type="username" value={ username } name="username" onChange={ this.handleUsername } required/>
+                        </div>
+                        <br />
+                        <div className="">
+                            <label htmlFor="password">New Password:</label>
+                            <input type="current-password" value={ password } name="password" onChange={ this.handlePassword } required/>
+                        </div>
+                        <br />
+                        <input 
+                            type="submit" 
+                            className="Popup-bttn" 
+                            value="Submit Your Order" 
+                        />
                     </form>
                 </div>
                 <Footer />

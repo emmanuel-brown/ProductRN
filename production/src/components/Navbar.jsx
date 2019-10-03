@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Navbar = () => {
+const Navbar = (props) => {
     return(
         <React.Fragment>
             <nav id="navigation">
@@ -11,6 +11,7 @@ const Navbar = () => {
                     <div><p><a href="/">Home</a></p></div>
                     <div><p><a href="/Product">Product</a></p></div>
                     <div><p><a href="/Contact">Contact</a></p></div>
+                    <div onClick={ props.signIn } style={{display: props.hasLogin ? 'block' : 'none'}}><p>Login</p></div>
                 </div>
             </nav>
         </React.Fragment>

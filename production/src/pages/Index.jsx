@@ -17,15 +17,15 @@ class Home extends React.Component{
         super(props);
         this.state = {
             contacts: [],
-            Popup: true,
-            id: null,
-            intro: true,
-            made: false,
-            name: ""
+            id: "", // user id of the user
+            intro: false, //sign in or sign up
+            made: false, //does the user have an account
+            username: "", //username input
+            password: "" // password input
         }
     }
 
-    componentDidMount(){
+    componentDidMount(){ //retieves all contacts when the component mounts
         fetch('/api/contacts')
             .then(res => res.json())
             .then(contacts => this.setState({ contacts }));
@@ -35,37 +35,58 @@ class Home extends React.Component{
         // })
     }
 
-    _switched = () =>{
-        this.setState({ Popup: !Popup })
+    getContact = (id) =>{
+        fetch(`/api/contact/${ id }`)
+            .then(res => res.json())
+            .then(res => console.table(res))
     }
 
-    _contactMade = () =>{
+    _switched = () =>{ //toggles the sign up or sign in popup
+        this.setState({ intro: !this.state.intro })
+    }
+
+    _contactMade = () =>{ //this states that the user is logged in
         this.setState({
             made: true
         })
-        console.log("it worked")
     }
 
-    handleName = (e) =>{
-        this.setState({ name: e.target.value })
+    _toggleIntro = () =>{
+        this.setState({ intro: !this.state.intro })
     }
 
-    logIn = (e) =>{
-        const { name } = this.state
-        fetch(`/api/user/${ name }`)
+    /* START OF onChanges */
+    handleUsername = (e) =>{
+        this.setState({ username: e.target.value })
+    }
+
+    handlePassword = (e) =>{
+        this.setState({ password: e.target.value })
+    }
+    /* END OF onChange */
+
+    logIn = (e) =>{ //logs the user in. backend handles validation. if false the function catches error
+        const { username, password, id } = this.state
+        fetch(`/api/user/${ username }/${ password }`)
             .then((res) => res.json())
-            .then((res) => this.setState({ 
-                id: res[0].contact_ID,
-                made: false
-            }))
+            .then((res) => {
+                this.setState({ 
+                    id: res[0].contact_ID,
+                    made: false
+                })
+            }).then(() => {
+                this.getContact(id)
+            }).catch(() =>{
+                console.log("incorrect password or user name")
+            })
         e.preventDefault()
     }
 
     render(){
-        const { id, made } = this.state
+        const { id, made, intro, username, password } = this.state
         return(
             <React.Fragment>
-                <Navbar />
+                <Navbar signIn={ this._toggleIntro } hasLogin={true}/>
                 <Carousel infiniteLoop={true} autoPlay={true} showStatus={false} centerMode={false} showIndicators={false} stopOnHover={false} showArrows={false} transitionTime={800} interval={5000}>
                     <div>
                         <img src={TheMoment} alt=""/>
@@ -141,16 +162,20 @@ class Home extends React.Component{
                     </div>
                 </section>
                 <Footer />
-                <Intro isOn={ id === null && !made } whenMade={ this._contactMade }/>
+                { intro && <Intro isOn={ id === "" && !made } whenMade={ this._contactMade }/> }
                 <Popup clicked={ () => this.setState({ made: false }) }  isOn={ made }>
                     <form onSubmit={ this.logIn }>
-                        <label htmlFor="Name">Name:</label>
-                        <input type="address" name="email" value={ this.state.name }onChange={ this.handleName } required/>
+                        <label htmlFor="username">User Name:</label>
+                        <input type="username" name="username" value={ username } onChange={ this.handleUsername } required/>
+                        <br />
+                        <label htmlFor="password">Password:</label>
+                        <input type="password" name="password" value={ password } onChange={ this.handlePassword } required/>
+                        <br />
                         <input 
                             type="submit" 
                             className="bttn" 
                             value="Log In" 
-                            style={{color: '#0FF4C6'}}
+                            style={{color: '#0FF4C6', backgroundColor: "black"}}
                         />
                     </form>
                 </Popup>

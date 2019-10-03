@@ -7,16 +7,12 @@ import Footer from '../components/Footer'
 
 
 
-class Product extends React.Component{
-    render(){
-        return(
-            <div>
-                <Navbar />
-                <Filtered />
-                <Footer />
-            </div>
-        )
-    }
-}
+const Product = () =>(
+    <>
+        <Navbar hasLogin={false}/>
+        <Filtered />
+        <Footer />
+    </>
+)
 
 export default Product
