@@ -1,5 +1,5 @@
 
-### ProductRN
+### Future Fancy
 * Is a ecommerce website that sales the most furturistic technology
 * available in the market. 
 
