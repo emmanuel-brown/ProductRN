@@ -29,10 +29,9 @@ describe('GET /api/contacts', () =>{
     })
     it('return product by id', (done) =>{
         chai.request(app)
-            .get('/api/products/4')
+            .get('/api/product/4')
             .end((err, res) =>{
                 // console.table(res)
-                requ
                 res.should.have.status(200)
                 done()
             })
@@ -42,7 +41,6 @@ describe('GET /api/contacts', () =>{
             .post('/api/newContact/')
             .end((err, res) =>{
                 // console.table(res)
-                requ
                 res.should.have.status(200)
                 done()
             })
